@@ -5,9 +5,9 @@ editor: visual
 ---
 
 ```{r}
-###
-# Load libraries
-###
+##################
+# Load libraries #
+##################
 
 # For general data science goodness
 library(tidyverse)
@@ -19,7 +19,7 @@ library(DBI)
 # A specific package for the flavor of database you are connecting.  
 # For MYSql, the package is library(RMySQL)
 # For Postgres, the package is library(RPostgreSQL)
-# I'm using a SQLite database for this example, so we use the RSQLite package
+# I'm using a SQLite database for this example
 # https://rsqlite.r-dbi.org/
 library(RSQLite)
 
@@ -27,17 +27,19 @@ library(RSQLite)
 library(dbplyr)
 
 # For getting the Connections panel to work
-# We're not doing this today, just to see
 # https://odbc.r-dbi.org/
-library(odbc)
+# library(odbc)
 
+##################
+# Some resources #
+##################
 # https://docs.posit.co/pro-drivers/
 # https://solutions.posit.co/connections/db/databases/my-sql/
 # https://solutions.posit.co/connections/db/r-packages/dplyr/
 
-###
-# Establish a database connection
-###
+############################
+# Step 1: Connect to db ####
+############################
 
 # I have in the data folder of this repo a sample database widely used in database testing, called Chinook. 
 # I am loading it locally.
@@ -53,6 +55,10 @@ chinook_database_connection <- dbConnect(RSQLite::SQLite(),
 #                  host = "database_url.com",
 #                  user = "your_username",
 #                  password = "your_password")
+
+######################
+# Step 2: Get data! ##
+######################
 
 ###
 # Get the tables in the database
