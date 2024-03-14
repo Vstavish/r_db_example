@@ -72,12 +72,16 @@ chinook_database_tables <- dbListTables(chinook_database_connection)
 
 employee_table <- dbReadTable(chinook_database_connection,"Employee")
 
+customer_table <- dbReadTable(chinook_database_connection,"Customer")
+
+invoice_table <- dbReadTable(chinook_database_connection,"Invoice")
+
+
 ###
-# DBPLYR method and collect
+# DBPLYR method: R to SQL
 ###
 
 # https://dbplyr.tidyverse.org/articles/dbplyr.html
-
 
 # Write a database query using dplyr verbs 
 employee_city_count_query <- tbl(chinook_database_connection, "Employee") %>% 
