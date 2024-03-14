@@ -43,7 +43,8 @@ library(dbplyr)
 
 # I have in the data folder of this repo a sample database widely used in database testing, called Chinook. 
 # I am loading it locally.
-chinook_database_connection <- dbConnect(RSQLite::SQLite(), 
+chinook_database_connection <- dbConnect(
+                 RSQLite::SQLite(), 
                  dbname = "data/Chinook_Sqlite.sqlite")
 
 
