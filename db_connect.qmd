@@ -1,0 +1,99 @@
+---
+title: "Sample DB connection in R"
+format: html
+editor: visual
+---
+
+```{r}
+###
+# Load libraries
+###
+
+# For general data science goodness
+library(tidyverse)
+
+# A generic library for database connections
+# https://dbi.r-dbi.org/
+library(DBI)
+
+# A specific package for the flavor of database you are connecting.  
+# For MYSql, the package is library(RMySQL)
+# For Postgres, the package is library(RPostgreSQL)
+# I'm using a SQLite database for this example, so we use the RSQLite package
+# https://rsqlite.r-dbi.org/
+library(RSQLite)
+
+# For R to SQL translation
+library(dbplyr)
+
+# For getting the Connections panel to work
+# We're not doing this today, just to see
+# https://odbc.r-dbi.org/
+library(odbc)
+
+# https://docs.posit.co/pro-drivers/
+# https://solutions.posit.co/connections/db/databases/my-sql/
+# https://solutions.posit.co/connections/db/r-packages/dplyr/
+
+###
+# Establish a database connection
+###
+
+# I have in the data folder of this repo a sample database widely used in database testing, called Chinook. 
+# I am loading it locally.
+chinook_database_connection <- dbConnect(RSQLite::SQLite(), 
+                 dbname = "data/Chinook_Sqlite.sqlite")
+
+
+# To load a remote database, a more common task, you'll need the hostname, and get the database admin to give you a user and pass
+# This is a sample of what that looks like
+
+# connection <- dbConnect(RSQLite::SQLite(), 
+#                  dbname = "my_database",
+#                  host = "database_url.com",
+#                  user = "your_username",
+#                  password = "your_password")
+
+###
+# Get the tables in the database
+###
+
+chinook_database_tables <- dbListTables(chinook_database_connection)
+
+###
+# Bring the entire table in to memory 
+###
+
+employee_table <- dbReadTable(chinook_database_connection,"Employee")
+
+###
+# DBPLYR method and collect
+###
+
+# https://dbplyr.tidyverse.org/articles/dbplyr.html
+
+
+# Write a database query using dplyr verbs 
+employee_city_count_query <- tbl(chinook_database_connection, "Employee") %>% 
+  group_by(City) %>%
+  count()
+
+# They are translated behind the scenes into valid SQL. 
+# Run to see the SQL that's generated
+# Probably more efficient than dplyr, SQL is a workhorse
+print(
+tbl(chinook_database_connection, "Employee") %>% 
+  group_by(City) %>%
+  count() %>%
+  show_query()
+)
+
+# Use collect() to actually return the query result as an R object.
+# More efficient than loading whole table into memory
+employee_city_count <- employee_city_count_query %>%
+  collect()
+
+# Disconnect from the database when finished
+dbDisconnect(chinook_database_connection)
+
+```
